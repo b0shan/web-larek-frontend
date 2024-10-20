@@ -24,16 +24,16 @@ Success: отображает страницу успешного заказа.
 Основные типы данных, используемые в приложении:
 
 IItem (товар): описывает структуру данных товара. Используется в классах, связанных с отображением товаров, например, в Basket и AppData.
-
+```
 interface IItem {
   id: string;
   name: string;
   price: number;
   quantity: number;
 }
-
+```
 IOrder (заказ): описывает данные заказа. Используется в классе Form и в AppData для отправки и получения данных о заказах.
-
+```
 interface IOrder {
   orderId: string;
   items: IItem[];
@@ -41,15 +41,15 @@ interface IOrder {
   shippingAddress: string;
   paymentMethod: string;
 }
-
+```
 IEventEmitter: описывает механизм работы с событиями. Используется в классе EventEmitter для установки, отмены и вызова событий.
-
+```
 interface IEventEmitter {
   on(event: string, callback: Function): void;
   off(event: string, callback: Function): void;
   emit(event: string, data?: any): void;
 }
-
+```
 
 
 ## Базовая архитектура
