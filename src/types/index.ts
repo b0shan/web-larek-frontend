@@ -5,7 +5,6 @@ interface IItemResponse {
   price: number;
   description: string;
   imageUrl: string;
-  stock: number;
 }
 
 //IOrderResponse: данные о заказе, полученные через API
@@ -15,7 +14,6 @@ interface IOrderResponse {
   totalAmount: number;
   shippingAddress: string;
   paymentMethod: string;
-  status: 'pending' | 'completed' | 'canceled';
 }
 
 //IItem: модель данных для товаров, используемая в приложении.
@@ -23,7 +21,6 @@ interface IItem {
   id: string;
   name: string;
   price: number;
-  quantity: number;
 }
 
 //IOrder: модель данных для заказа, используемая для хранения и отображения информации о заказах.
@@ -31,7 +28,8 @@ interface IOrder {
   orderId: string;
   items: IItem[];
   totalAmount: number;
-  customerName: string;
+  email: string;
+  number: string;
   shippingAddress: string;
   paymentMethod: string;
 }
@@ -46,18 +44,12 @@ interface IBasketView {
 
 //IFormView: интерфейс для формы заказа.
 interface IFormView {
-  customerName: string;
-  shippingAddress: string;
   paymentMethod: string;
+  shippingAddress: string;
+  email: string;
+  number: string;
   validate(): boolean;
   submit(): void;
-}
-
-//Интерфейс API-клиента:
-interface IApiClient {
-  getItems(): Promise<IItemResponse[]>;
-  getOrder(orderId: string): Promise<IOrderResponse>;
-  submitOrder(order: IOrder): Promise<boolean>;
 }
 
 //Интерфейс EventEmitter:
