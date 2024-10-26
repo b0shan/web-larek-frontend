@@ -21,6 +21,8 @@ interface IItem {
   id: string;
   name: string;
   price: number;
+  description: string;
+  imageUrl: string;
 }
 
 //IOrder: модель данных для заказа, используемая для хранения и отображения информации о заказах.
