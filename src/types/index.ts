@@ -1,33 +1,52 @@
-// IItemResponse: данные о товаре, полученные через API
-interface IItemResponse {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  imageUrl: string;
+// Интерфейс для данных полученных через API
+interface IResponseAPI {
+  getCardList: () => Promise<ICard[]>;
+  getCard: (id: string) => Promise<ICard>;
+	orderItems(order: IOrder): Promise<IOrderSuccess>;
 }
 
-//IOrder: модель данных для заказа, используемая для хранения и отображения информации о заказах.
+//Интерфейс карточки
+interface ICard {
+	id: string;
+	title: string;
+	category: CardCategory;
+	description: string;
+	image: string;
+	price: number | null;
+	button: string;
+}
+
+// Категории карточек
+type CategoryCard =
+	| 'софт-скилл'
+	| 'другое'
+	| 'дополнительное'
+	| 'кнопка'
+	| 'хард-скилл';
+
+//Интерфейс для заказа
 interface IOrder {
-  items: IItem[];
-  totalAmount: number;
+  items: string[];
+  total: number;
   email: string;
   number: string;
-  shippingAddress: string;
-  paymentMethod: string;
+  address: string;
+  payment: string;
 }
 
-//IFormView: интерфейс для формы заказа.
+//Интерфейс успешной операции
+interface IOrderSuccess{
+  id: string;
+	total: number;
+}
+
+//IFormView: интерфейс для формы.
 interface IFormView {
-  paymentMethod: string;
-  shippingAddress: string;
-  email: string;
-  number: string;
-  validate(): boolean;
-  submit(): void;
+  errors: string[];
+  validForm: boolean;
 }
 
-//Интерфейс EventEmitter:
+//Интерфейс класса EventEmitter:
 interface IEventEmitter {
   on(event: string, callback: Function): void;
   off(event: string, callback: Function): void;
