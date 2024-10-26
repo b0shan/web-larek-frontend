@@ -2,27 +2,27 @@
 interface IResponseAPI {
   getCardList: () => Promise<ICard[]>;
   getCard: (id: string) => Promise<ICard>;
-	orderItems(order: IOrder): Promise<IOrderSuccess>;
+  orderItems(order: IOrder): Promise<IOrderSuccess>;
 }
 
 //Интерфейс карточки
 interface ICard {
-	id: string;
-	title: string;
-	category: CardCategory;
-	description: string;
-	image: string;
-	price: number | null;
-	button: string;
+  id: string;
+  title: string;
+  category: CardCategory;
+  description: string;
+  image: string;
+  price: number | null;
+  button: string;
 }
 
 // Категории карточек
 type CategoryCard =
-	| 'софт-скилл'
-	| 'другое'
-	| 'дополнительное'
-	| 'кнопка'
-	| 'хард-скилл';
+  | 'софт-скилл'
+  | 'другое'
+  | 'дополнительное'
+  | 'кнопка'
+  | 'хард-скилл';
 
 //Интерфейс для заказа
 interface IOrder {
@@ -37,7 +37,7 @@ interface IOrder {
 //Интерфейс успешной операции
 interface IOrderSuccess{
   id: string;
-	total: number;
+  total: number;
 }
 
 //IFormView: интерфейс для формы.
