@@ -9,7 +9,7 @@ interface IResponseAPI {
 interface ICard {
   id: string;
   title: string;
-  category: CardCategory;
+  category: CategoryCard;
   description: string;
   image: string;
   price: number | null;
@@ -40,8 +40,8 @@ interface IOrderSuccess{
   total: number;
 }
 
-//IFormView: интерфейс для формы.
-interface IFormView {
+//IForm: интерфейс для формы.
+interface IForm{
   errors: string[];
   validForm: boolean;
 }
