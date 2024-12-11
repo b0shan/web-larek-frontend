@@ -2,11 +2,10 @@ export interface IModal {
     content: HTMLElement;
     open(): void;
     close(): void;
-    render(): void;
 }
 
 
-export class Modal implements IModal{
+export class Modal implements IModal {
     protected closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
 
@@ -18,4 +17,17 @@ export class Modal implements IModal{
         this.container.addEventListener('click', this.close.bind(this));
         this.container.querySelector('.modal__container').addEventListener('click', (event) => event.stopPropagation());
     }
+
+    set content(value: HTMLElement) {
+        this._content.replaceChildren(value);
+    }
+
+    open() {
+        this.container.classList.add('modal_active');
+    }
+    
+    close() {
+        this.container.classList.remove('modal_active');
+    }
+
 }
