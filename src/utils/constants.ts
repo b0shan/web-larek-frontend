@@ -8,7 +8,7 @@ export const settings = {
 export const labels = new Map([
 	['софт-скилл', 'card__category_soft'],
 	['другое', 'card__category_other'],
-	['дополнительное', 'card__category_additional'],
+	['дополнительное', 'card__category_plus'],
 	['кнопка', 'card__category_button'],
     ['хард-скилл', 'card__category_hard'],
 ]);
