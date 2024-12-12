@@ -1,25 +1,88 @@
 import { Model } from './Model';
 
 export interface IAppData {
-    catalog: ICard[]; // Массив объектов каталога товаров.
-    basketItems: string[]; // Массив идентификаторов товаров в корзине.
-    currentItemID: string | null; // Идентификатор открытого товара.
-    formErrors: string[]; // Массив ошибок формы.
+    order: IOrder | null;
 }
 
 
 
 
 export class AppData extends Model<IAppData> {
-    getCatalog(): ICard[]// получение массива каталога товаров.
-    getProductID(id: string): void // Возвращает данные товара по его ID.
-    toggleBasket(itemID: string): void // Добавляет или удаляет товар из корзины.
-    totalBasket(): number // Возвращает общую сумму корзины.
-    clearBasket(): void // очищает корзину.  
-    setPayMethod(payment: string): void // для выбора способа оплаты.
-    setAddress(address: string): void // для указания адреса доставки.
-    setPhone(phone: string): void // для указания номера телефона для заказа.
-    setEmail(email: string): void // для указания электронной почты для заказа.
-    validateOrder(): boolean // проводит проверку валидности заказа и отправляет событие об изменении.
-    resetOrder(): void // сбрасывает данные о заказе.
+    catalog: ICard[] = [];
+	basketItems: ICard[] = [];
+	preview: string | null;
+    order: IOrder = {
+		total: 0,
+		items: [],
+		email: '',
+		number: '',
+		address: '',
+		payment: '',
+	};
+
+
+
+    getCatalog(items: ICard[]) {    // получение массива каталога товаров.
+
+    }
+   
+    getProductID(item: ICard) {
+        return Number(this.basket.indexOf(item)) + 1;
+    }
+
+    addBasket(item: ICard) {
+		this.basket = [...this.basket, item];
+		this.sendUpdates('basket:changed');
+	}
+
+    removeBasket(item: ICard) {
+        this.basket = this.basket.filter((card) => card.id !== item.id);
+		this.sendUpdates('basket:changed');
+    }
+
+    totalBasket() {
+		return this.basket.reduce((total, card) => total + card.price, 0);
+	}
+
+    clearBasket() {
+		this.basket = [];
+		this.sendUpdates('basket:changed');
+	}
+
+    setPayMethod(value: string) {
+		this.order.payment = value;
+	}
+
+    setAddress(value: string) {
+		this.order.address = value;
+	}
+
+    setPhone(value: string) {
+		this.order.phone = value;
+	}
+
+    setEmail(value: string) {
+		this.order.email = value;
+	}
+
+    clearOrder() {
+		this.order = {
+			total: 0,
+			items: [],
+			email: '',
+			number: '',
+			address: '',
+			payment: '',
+		};
+	}
+
+
 }
+
+
+
+
+
+
+
+
