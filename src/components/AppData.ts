@@ -1,4 +1,6 @@
 import { Model } from './Model';
+import { ICard, IOrder, IBasket } from '../types/index';
+
 
 export interface IAppData {
     order: IOrder | null;
@@ -23,30 +25,31 @@ export class AppData extends Model<IAppData> {
 
 
     getCatalog(items: ICard[]) {    // получение массива каталога товаров.
-
+		items.forEach((item) => (this.catalog = [...this.catalog, item]));
+		this.sendUpdates('cards:changed');
     }
    
     getProductID(item: ICard) {
-        return Number(this.basket.indexOf(item)) + 1;
+        return Number(this.basketItems.indexOf(item)) + 1;
     }
 
     addBasket(item: ICard) {
-		this.basket = [...this.basket, item];
-		this.sendUpdates('basket:changed');
+		this.basketItems = [...this.basketItems, item];
+		this.sendUpdates('basketItems:changed');
 	}
 
     removeBasket(item: ICard) {
-        this.basket = this.basket.filter((card) => card.id !== item.id);
-		this.sendUpdates('basket:changed');
+        this.basketItems = this.basketItems.filter((card) => card.id !== item.id);
+		this.sendUpdates('basketItems:changed');
     }
 
     totalBasket() {
-		return this.basket.reduce((total, card) => total + card.price, 0);
+		return this.basketItems.reduce((total, card) => total + card.price, 0);
 	}
 
     clearBasket() {
-		this.basket = [];
-		this.sendUpdates('basket:changed');
+		this.basketItems = [];
+		this.sendUpdates('basketItems:changed');
 	}
 
     setPayMethod(value: string) {
@@ -58,7 +61,7 @@ export class AppData extends Model<IAppData> {
 	}
 
     setPhone(value: string) {
-		this.order.phone = value;
+		this.order.number = value;
 	}
 
     setEmail(value: string) {

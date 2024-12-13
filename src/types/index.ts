@@ -1,12 +1,12 @@
 // Интерфейс для данных полученных через API
-interface IResponseAPI {
+export interface IResponseAPI {
   getCardList: () => Promise<ICard[]>; // Получает список карточек товара.
   getCard: (id: string) => Promise<ICard>; // Получает карточку товара по ID.
   orderItems(order: IOrder): Promise<IOrderSuccess>; // Отправляет заказ и возвращает результат.
 }
 
 //Интерфейс карточки
-interface ICard {
+export interface ICard {
   id: string; // Уникальный идентификатор товара
   title: string; // Название товара
   category: CategoryCard; // Категория товара
@@ -17,7 +17,7 @@ interface ICard {
 }
 
 // Категории карточек
-type CategoryCard =
+export type CategoryCard =
   | 'софт-скилл'
   | 'другое'
   | 'дополнительное'
@@ -25,7 +25,7 @@ type CategoryCard =
   | 'хард-скилл';
 
 //Интерфейс для заказа
-interface IOrder {
+export interface IOrder {
   items: string[]; // Массив идентификаторов товаров в заказе
   total: number; // Общая сумма заказа
   email: string; // Электронная почта
@@ -35,20 +35,27 @@ interface IOrder {
 }
 
 //Интерфейс успешной операции
-interface IOrderSuccess{
+export interface IOrderSuccess{
   id: string; // Уникальный идентификатор заказа
   total: number; // Общая сумма заказа
 }
 
 //IForm: интерфейс для формы.
-interface IForm{
+export interface IForm{
   errors: string[]; // Массив ошибок формы
   validForm: boolean; // Валидация формы
 }
 
 //Интерфейс класса EventEmitter:
-interface IEventEmitter {
+export interface IEventEmitter {
   on(event: string, callback: Function): void; // Подписка на событие
   off(event: string, callback: Function): void; // Отмена подписки
   emit(event: string, data?: any): void; // Вызов события с данными
+}
+
+export type TCardBasket = Pick<ICard, 'id' | 'title' | 'price'>;
+
+export interface IBasket {
+	updateItems: TCardBasket[];
+	updateSum: number | null;
 }
