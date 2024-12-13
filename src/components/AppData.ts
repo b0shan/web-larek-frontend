@@ -1,5 +1,5 @@
 import { Model } from './Model';
-import { ICard, IOrder, IBasket } from '../types/index';
+import { ICard, IOrder } from '../types/index';
 
 
 export interface IAppData {

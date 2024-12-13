@@ -59,3 +59,14 @@ export interface IBasket {
 	updateItems: TCardBasket[];
 	updateSum: number | null;
 }
+
+export interface IRenderData {
+  content: HTMLElement;
+}
+
+export interface IModal {
+  content: HTMLElement;
+  open(): void;
+  close(): void;
+}
+

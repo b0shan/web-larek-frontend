@@ -1,15 +1,13 @@
-export interface IModal {
-    content: HTMLElement;
-    open(): void;
-    close(): void;
-}
+import { IRenderData } from "../types";
+import { Component } from "./Component";
 
-
-export class Modal implements IModal {
+export class Modal extends Component <IRenderData> {
     protected closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
 
-    constructor(protected container: HTMLElement) {
+    constructor(container: HTMLElement) {
+        super(container);
+        
         this.closeButton = container.querySelector('.modal__close');
         this._content = container.querySelector('.modal__content');
 
@@ -29,5 +27,12 @@ export class Modal implements IModal {
     close() {
         this.container.classList.remove('modal_active');
     }
+
+    render(data: IRenderData): HTMLElement {
+		super.renderComponent(data);
+		this.open();
+		return this.container;
+	}
+
 
 }

@@ -1,6 +1,6 @@
 export class Component<T> {
-
-    constructor(protected container: HTMLElement) {}
+   
+    protected constructor(protected readonly container: HTMLElement) {}
 
     setText(element: HTMLElement, text: string) {
         if (element) {
