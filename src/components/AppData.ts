@@ -6,9 +6,6 @@ export interface IAppData {
     order: IOrder | null;
 }
 
-
-
-
 export class AppData extends Model<IAppData> {
     catalog: ICard[] = [];
 	basketItems: ICard[] = [];
@@ -21,8 +18,6 @@ export class AppData extends Model<IAppData> {
 		address: '',
 		payment: '',
 	};
-
-
 
     getCatalog(items: ICard[]) {    // получение массива каталога товаров.
 		items.forEach((item) => (this.catalog = [...this.catalog, item]));
@@ -44,7 +39,7 @@ export class AppData extends Model<IAppData> {
     }
 
     totalBasket() {
-		return this.basketItems.reduce((total, card) => total + card.price, 0);
+		return this.basketItems.reduce((total, card) => total + card.cardPrice, 0);
 	}
 
     clearBasket() {

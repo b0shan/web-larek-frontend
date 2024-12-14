@@ -27,5 +27,4 @@ export class Page extends Component<IPage> {
     set gallery(items: HTMLElement[]) {
 		this._gallery.replaceChildren(...items);
 	}
-
 }
