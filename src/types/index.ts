@@ -70,3 +70,7 @@ export interface IModal {
   close(): void;
 }
 
+export interface IPage {
+	counter: number;
+	catalog: HTMLElement[];
+}

@@ -1,0 +1,7 @@
+import { Component } from './Component';
+import { ICard } from './../types/index';
+
+export class Card extends Component<ICard> {
+
+
+}
