@@ -1,6 +1,6 @@
 export class Component<T> {
    
-    protected constructor(protected readonly container: HTMLElement) {}
+    protected constructor(protected container: HTMLElement) {}
 
     setText(element: HTMLElement, text: string) {
         if (element) {
@@ -36,4 +36,7 @@ export class Component<T> {
         Object.assign(this, data);
         return this.container;
     }// Создаёт и возвращает компонент.
+
+
+
 }

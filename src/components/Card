@@ -1,7 +1,111 @@
 import { Component } from './Component';
 import { ICard } from './../types/index';
+import { ensureElement} from '../utils/utils';
+import { ICardActions } from '../types';
+
+
+
+
+
 
 export class Card extends Component<ICard> {
+	protected _title: HTMLElement;
+	protected _image: HTMLImageElement;
+	protected _button: HTMLButtonElement;
+	protected _category: HTMLSpanElement;
+	protected _price: HTMLSpanElement;
+	protected _description: HTMLElement;
 
+    labels: Record<string, string> ={
+        'софт-скилл': 'card__category_soft',
+        'другое': 'card__category_other',
+        'дополнительное': 'card__category_plus',
+        'кнопка': 'card__category_button',
+        'хард-скилл': 'card__category_hard',
+    }
+
+	constructor(container: HTMLElement, actions?: ICardActions) {
+		super(container);
+
+		this._title = ensureElement<HTMLElement>(`.card__title`, container);
+		this._price = ensureElement<HTMLSpanElement>(`.card__price`, container);
+		this._category = ensureElement<HTMLSpanElement>(`.card__category`);
+		this._button = ensureElement<HTMLButtonElement>(`.card__button`);
+		this._image = ensureElement<HTMLImageElement>(`.card__image`);
+		this._description = ensureElement<HTMLElement>(`.card__text`)!;
+
+		if (actions?.onClick) {
+			if (this._button) {
+				this._button.addEventListener('click', actions.onClick);
+			} else {
+				container.addEventListener('click', actions.onClick);
+			}
+		}
+	}
+
+	set id(value: string) {
+		this.container.dataset.id = value;
+	}
+	get id(): string {
+		return this.container.dataset.id || '';
+	}
+
+	set title(value: string) {
+		this.setText(this._title, value);
+	}
+
+	get title() {
+		return this._title.textContent || '';
+	}
+
+	set description(value: string) {
+		this.setText(this._description, value);
+	}
+    
+    get description() {
+        return this._description?.textContent ?? ''; // Используем оператор опциональной цепочки
+    }
+
+	set price(value: string) {
+		if (value) {
+			this.setText(this._price, `${value} синапсов`);
+		} else {
+			this.setText(this._price, 'Бесценно');
+		}
+
+		if (this._button) {
+			this._button.disabled = !value;
+		}
+	}
+
+	get price() {
+		return this._price.textContent || '';
+	}
+
+	set image(value: string) {
+		this.setImage(this._image, value, this.title);
+	}
+
+    set category(value: string) {
+        this.setText(this._category, value);
+        const category = this._category.classList[0];
+        this._category.className = '';
+        this._category.classList.add(`${category}`);
+        this._category.classList.add(`${category}${this.labels[value]}`)
+    }
+
+	get category() {
+		return this._category.textContent || '';
+	}
+
+	set button(value: string) {
+		this._button.textContent = value;
+	}
+
+    toggleClass(element: HTMLElement, className: string, force?: boolean) {
+        element.classList.toggle(className, force);
+    }
 
 }
+
+

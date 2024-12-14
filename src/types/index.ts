@@ -8,12 +8,12 @@ export interface IResponseAPI {
 //Интерфейс карточки
 export interface ICard {
   id: string; // Уникальный идентификатор товара
-  title: string; // Название товара
-  category: CategoryCard; // Категория товара
-  description: string; // Описание товара
-  image: string; // URL изображения товара
-  price: number | null; // Цена товара (может быть null)
-  button: string; // Текст кнопки действия
+  cardTitle: string; // Название товара
+  cardCategory: CategoryCard; // Категория товара
+  cardDescription: string; // Описание товара
+  cardImage: string; // URL изображения товара
+  cardPrice: number | null; // Цена товара (может быть null)
+  ctionButton: string; // Текст кнопки действия
 }
 
 // Категории карточек
@@ -23,6 +23,11 @@ export type CategoryCard =
   | 'дополнительное'
   | 'кнопка'
   | 'хард-скилл';
+
+// Реакция на клик по карточке
+export interface ICardActions {
+	onClick: (event: MouseEvent) => void;
+}
 
 //Интерфейс для заказа
 export interface IOrder {
@@ -53,7 +58,7 @@ export interface IEventEmitter {
   emit(event: string, data?: any): void; // Вызов события с данными
 }
 
-export type TCardBasket = Pick<ICard, 'id' | 'title' | 'price'>;
+export type TCardBasket = Pick<ICard, 'id' | 'cardTitle' | 'cardPrice'>;
 
 export interface IBasket {
 	updateItems: TCardBasket[];
