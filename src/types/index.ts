@@ -13,7 +13,7 @@ export interface ICard {
   cardDescription: string; // Описание товара
   cardImage: string; // URL изображения товара
   cardPrice: number | null; // Цена товара (может быть null)
-  ctionButton: string; // Текст кнопки действия
+  actionButton: string; // Текст кнопки действия
 }
 
 // Категории карточек
@@ -28,6 +28,10 @@ export type CategoryCard =
 export interface ICardActions {
 	onClick: (event: MouseEvent) => void;
 }
+
+
+
+
 
 //Интерфейс для заказа
 export interface IOrder {
@@ -44,6 +48,12 @@ export interface IOrderSuccess{
   id: string; // Уникальный идентификатор заказа
   total: number; // Общая сумма заказа
 }
+
+export type TOrderPayment = Pick<IOrder, 'payment' | 'address'>;
+export type TOrderContacts = Pick<IOrder, 'email' | 'number'>;
+export type TOrderField = TOrderContacts & TOrderPayment;
+export type TFormErrors = Partial<Record<keyof IOrder, string>>;
+
 
 //IForm: интерфейс для формы.
 export interface IForm{
@@ -78,4 +88,11 @@ export interface IModal {
 export interface IPage {
 	counter: number;
 	catalog: HTMLElement[];
+}
+
+export interface ISuccess {
+	total: number;
+}
+export interface ISuccessActions {
+	onClick: () => void;
 }

@@ -1,16 +1,17 @@
 import { IRenderData } from "../types";
 import { Component } from "./Component";
+import { IEvents } from './base/events';
+import { ensureElement } from '../utils/utils';
 
 export class Modal extends Component <IRenderData> {
     protected closeButton: HTMLButtonElement;
     protected _content: HTMLElement;
 
-    constructor(container: HTMLElement) {
+    constructor(container: HTMLElement, protected events: IEvents) {
         super(container);
         
-        this.closeButton = container.querySelector('.modal__close');
-        this._content = container.querySelector('.modal__content');
-
+        this.closeButton = ensureElement<HTMLButtonElement>('.modal__close', container);
+        this.content = container.querySelector('.modal__content');
         this.closeButton.addEventListener('click', this.close.bind(this));
         this.container.addEventListener('click', this.close.bind(this));
         this.container.querySelector('.modal__container').addEventListener('click', (event) => event.stopPropagation());

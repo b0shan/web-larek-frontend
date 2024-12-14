@@ -37,6 +37,8 @@ export class Component<T> {
         return this.container;
     }// Создаёт и возвращает компонент.
 
-
+    toggleClass(element: HTMLElement, className: string, force?: boolean) {
+		element.classList.toggle(className, force);
+	}
 
 }

@@ -4,7 +4,7 @@ import { IOrder, IOrderSuccess, ICard } from '../types';
 export interface IWebLarekAPI {
 	getProductList: () => Promise<ICard[]>;
 	getProductItem: (id: string) => Promise<ICard>;
-	orderProducts: (order: IOrder) => Promise<IOrderSuccess>;
+	orderItems: (order: IOrder) => Promise<IOrderSuccess>;
 }
 
 export class WebLarekAPI extends Api implements IWebLarekAPI {
@@ -31,7 +31,7 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
 		}));
 	}
 
-	orderProducts(order: IOrder): Promise<IOrderSuccess> {
+	orderItems(order: IOrder): Promise<IOrderSuccess> {
 		return this.post('/order', order).then((data: IOrderSuccess) => data);
 	}
 }

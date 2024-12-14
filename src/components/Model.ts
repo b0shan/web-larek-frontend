@@ -5,7 +5,7 @@ export class Model<T> {
 		Object.assign(this, data);
 	}
 
-	sendUpdates(event: string) {
-		this.events.emit(event);
+	sendUpdates(event: string, payload?: object) {
+		this.events.emit(event, payload ?? {});
 	}
 }

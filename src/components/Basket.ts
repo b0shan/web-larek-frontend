@@ -1,5 +1,5 @@
-import { createElement, ensureElement } from '../utils/utils';
 import { Component } from './Component';
+import { createElement, ensureElement } from '../utils/utils';
 import { IBasket } from '../types';
 import { IEvents } from './base/events';
 
