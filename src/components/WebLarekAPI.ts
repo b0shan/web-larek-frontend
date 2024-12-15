@@ -1,11 +1,6 @@
 import { Api, ApiListResponse } from './base/api';
 import { IOrder, IOrderSuccess, ICard } from '../types';
-
-export interface IWebLarekAPI {
-	getProductList: () => Promise<ICard[]>;
-	getProductItem: (id: string) => Promise<ICard>;
-	orderItems: (order: IOrder) => Promise<IOrderSuccess>;
-}
+import { IWebLarekAPI} from '../types';
 
 export class WebLarekAPI extends Api implements IWebLarekAPI {
 	readonly cdn: string;
@@ -14,24 +9,15 @@ export class WebLarekAPI extends Api implements IWebLarekAPI {
 		super(baseUrl, options);
 		this.cdn = cdn;
 	}
-
-	getProductList(): Promise<ICard[]> {
-		return this.get('/product').then((data: ApiListResponse<ICard>) =>
-			data.items.map((item) => ({
-				...item,
-				image: this.cdn + item.cardImage,
-			}))
+	getCardItem(id: string): Promise<ICard> {
+		return this.get(`/product/${id}`).then((item: ICard) => ({...item,image: this.cdn + item.image,}));
+	}
+	getCardList(): Promise<ICard[]> {
+		return this.get(`/product`).then((data: ApiListResponse<ICard>) =>
+			data.items.map((item) => ({...item,image: this.cdn + item.image,}))
 		);
 	}
-
-	getProductItem(id: string): Promise<ICard> {
-		return this.get(`/product/${id}`).then((item: ICard) => ({
-			...item,
-			image: this.cdn + item.cardImage,
-		}));
-	}
-
 	orderItems(order: IOrder): Promise<IOrderSuccess> {
-		return this.post('/order', order).then((data: IOrderSuccess) => data);
+		return this.post(`/order`, order).then((data: IOrderSuccess) => data);
 	}
 }

@@ -1,159 +1,109 @@
 import { Model } from './Model';
-import { ICard, IOrder } from '../types/index';
-import { TOrderField, TFormErrors } from '../types/index';
-
-export interface IAppData {
-    order: IOrder | null;
-}
+import { ICard, IOrder, TOrderField,TFormErrors } from '../types';
+import { IAppData } from '../types';
 
 export class AppData extends Model<IAppData> {
-    catalog: ICard[] = [];
-	basketItems: ICard[] = [];
+	formErrors: TFormErrors = {};
+	catalog: ICard[] = [];
+	basket: ICard[] = [];
 	preview: string | null;
-    order: IOrder = {
+	order: IOrder = {
 		total: 0,
 		items: [],
 		email: '',
-		number: '',
+		phone: '',
 		address: '',
 		payment: '',
 	};
+	
 
-	formErrors: TFormErrors = {};
-
-    getCatalog(items: ICard[]) {    // получение массива каталога товаров.
+	getCatalog(items: ICard[]) {
 		items.forEach((item) => (this.catalog = [...this.catalog, item]));
-		this.sendUpdates('cards:changed');
-    }
-   
-    getProductID(item: ICard) {
-        return Number(this.basketItems.indexOf(item)) + 1;
-    }
-
-    addBasket(item: ICard) {
-		this.basketItems = [...this.basketItems, item];
-		this.sendUpdates('basketItems:changed');
+		this.sendUpdates('cards:changed', { catalog: this.catalog });
 	}
 
-    removeBasket(item: ICard) {
-        this.basketItems = this.basketItems.filter((card) => card.id !== item.id);
-		this.sendUpdates('basketItems:changed');
-    }
-
-    totalBasket() {
-		return this.basketItems.reduce((total, card) => total + card.cardPrice, 0);
-	}
-
-    clearBasket() {
-		this.basketItems = [];
-		this.sendUpdates('basketItems:changed');
-	}
-
-    setPayMethod(value: string) {
-		this.order.payment = value;
-	}
-
-    setAddress(value: string) {
-		this.order.address = value;
-	}
-
-    setPhone(value: string) {
-		this.order.number = value;
-	}
-
-    setEmail(value: string) {
-		this.order.email = value;
-	}
-
-    clearOrder() {
-		this.order = {
-			total: 0,
-			items: [],
-			email: '',
-			number: '',
-			address: '',
-			payment: '',
-		};
-	}
-
-	setPreview(item: ICard) {
+	getPreview(item: ICard) {
 		this.preview = item.id;
 		this.sendUpdates('preview:changed', item);
 	}
 
-	getButtonStatus(item: ICard) {
-		if (item.cardPrice === null) {
+	getStatusButton(item: ICard) {
+		if (item.price === null) {
 			return 'Не для продажи';
 		}
-		if (!this.basketItems.some((card) => card.id == item.id)) {
+		if (!this.basket.some((card) => card.id == item.id)) {
 			return 'В корзину';
 		} else {
 			return 'Убрать из корзины';
 		}
 	}
 
-	addCardToBasket(item: ICard) {
-		this.basketItems = [...this.basketItems, item];
-		this.sendUpdates('basket:changed');
-	}
-
-	deleteCardFromBasket(item: ICard) {
-		this.basketItems = this.basketItems.filter((card) => card.id !== item.id);
-		this.sendUpdates('basket:changed');
-	}
-
-	toggleBasketCard(item: ICard) {
-		return !this.basketItems.some((card) => card.id === item.id)
+	toggleBasket(item: ICard) {
+		return !this.basket.some((card) => card.id === item.id)
 			? this.addCardToBasket(item)
 			: this.deleteCardFromBasket(item);
 	}
 
+	addCardToBasket(item: ICard) {
+		this.basket = [...this.basket, item];
+		this.sendUpdates('basket:changed');
+	}
+
+	deleteCardFromBasket(item: ICard) {
+		this.basket = this.basket.filter((card) => card.id !== item.id);
+		this.sendUpdates('basket:changed');
+	}
+
+	getIndex(item: ICard) {
+		return Number(this.basket.indexOf(item)) + 1;
+	}
+
+	clearBasket() {
+		this.basket = [];
+		this.sendUpdates('basket:changed');
+	}
+
+	resetOrder() {
+		this.order = {
+			total: 0,
+			items: [],
+			email: '',
+			phone: '',
+			address: '',
+			payment: '',
+		};
+	}
+
+	setBasketInOrder() {
+		this.order.items = this.basket.map((card) => card.id);
+		this.order.total = this.getBasketTotal();
+	}
+
 	getBasketTotal() {
-		return this.basketItems.reduce((total, card) => total + card.cardPrice, 0);
+		return this.basket.reduce((total, card) => total + card.price, 0);
 	}
 
-	getCardIndex(item: ICard) {
-		return Number(this.basketItems.indexOf(item)) + 1;
+	setOrderPayment(value: string) {this.order.payment = value;}
+	setOrderAddress(value: string) {this.order.address = value;}
+	setOrderPhone(value: string) {this.order.phone = value;}
+	setOrderEmail(value: string) {this.order.email = value;}
+
+	setOrderField(field: keyof TOrderField, value: string) {
+		this.order[field] = value;
+		this.validOrder();
 	}
 
-	validateOrder() {
+	validOrder() {
 		const errors: typeof this.formErrors = {};
-
-		if (!this.order.email) {
-			errors.email = `Не указана почта`;
-		}
-		if (!this.order.number) {
-			errors.number = `Не указан номер телефона`;
-		}
-		if (!this.order.address) {
-			errors.address = `Не указан адрес`;
-		}
-		if (!this.order.payment) {
-			errors.payment = `Не указан способ оплаты`;
-		}
-
+		if (!this.order.email) {errors.email = `Не указана почта`;}
+		if (!this.order.phone) {errors.phone = `Не указан номер телефона`;}
+		if (!this.order.address) {errors.address = `Не указан адрес`;}
+		if (!this.order.payment) {errors.payment = `Не указан способ оплаты`;}
 		this.formErrors = errors;
 		this.events.emit('formErrors:changed', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
-
-	setOrderField(field: keyof TOrderField, value: string) {
-		this.order[field] = value;
-		this.validateOrder();
-	}
-
-	setOrderPayment(value: string) {
-		this.order.payment = value;
-	}
-
-	setBasketToOrder() {
-		this.order.items = this.basketItems.map((card) => card.id);
-		this.order.total = this.getBasketTotal();
-	}
-
-
 }
-
 
 
 

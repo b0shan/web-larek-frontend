@@ -69,6 +69,12 @@ export function getObjectProperties(obj: object, filter?: (name: string, prop: P
         .map(([name, prop]) => name);
 }
 
+
+export function formatNumber(x: number, sep = ' ') {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, sep);
+}
+
+
 /**
  * Устанавливает dataset атрибуты элемента
  */
