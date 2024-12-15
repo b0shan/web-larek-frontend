@@ -1,21 +1,14 @@
-import { ICard } from '../types/index';
-import { ICardActions } from '../types/index';
-import { ensureElement, formatNumber} from '../utils/utils';
+import { ICard} from './../types/index';
+import { ICardActions } from '../types';
+import { ensureElement, formatNumber } from '../utils/utils';
 import { Component } from './Component';
-
-const labels = new Map([
-	['софт-скилл', 'card__label_soft'],
-	['другое', 'card__label_other'],
-	['дополнительное', 'card__label_additional'],
-	['кнопка', 'card__label_button'],
-	['хард-скилл', 'card__label_hard'],
-]);
+import { labels } from '../utils/constants';
 
 export class Card extends Component<ICard> {
 	protected _title: HTMLElement;
 	protected _image: HTMLImageElement;
 	protected _button: HTMLButtonElement;
-	protected _label: HTMLSpanElement;
+	protected _labels: HTMLSpanElement;
 	protected _price: HTMLSpanElement;
 	protected _description?: HTMLElement;
 
@@ -24,17 +17,16 @@ export class Card extends Component<ICard> {
 
 		this._title = ensureElement<HTMLElement>(`.card__title`, container);
 		this._price = ensureElement<HTMLSpanElement>(`.card__price`, container);
-		this._label = container.querySelector(`.card__category`);
+		this._labels = container.querySelector(`.card__category`);
 		this._button = container.querySelector(`.card__button`);
 		this._image = container.querySelector(`.card__image`);
 		this._description = container.querySelector(`.card__text`);
-		
+
 		if (actions?.onClick) {
 			if (this._button) {
 				this._button.addEventListener('click', actions.onClick);
 			} else {
-				container.addEventListener('click', actions.onClick);
-			}
+				container.addEventListener('click', actions.onClick);}
 		}
 	}
 
@@ -49,19 +41,19 @@ export class Card extends Component<ICard> {
 
 	set price(value: string) {
 		if (value) {
-			this.setText(
-				this._price,`${value.toString().length <= 4 ? value : formatNumber(Number(value))} синапсов`);
-		} else {
-			this.setText(this._price, `Бесценно`);
-		}
+			this.setText(this._price,`${value.toString().length <= 4 ? value : formatNumber(Number(value))} синапсов`);
+		} else {this.setText(this._price, `Бесценно`);}
 	}
 
 	get price() {return this._price.textContent;}
 	set image(value: string) {this.setImage(this._image, value, this.title);}
-	
-	set label(value: string) {this.setText(this._label, value);this.toggleClass(this._label, labels.get(value), true);}
-	get label() {return this._label.textContent || '';}
-	
+
+	set category(value: string) {
+		this.setText(this._labels, value);
+		this.toggleClass(this._labels, labels.get(value), true);
+	}
+
+	get category() {return this._labels.textContent || '';}
 	set button(value: string) {this._button.textContent = value;}
 }
 
