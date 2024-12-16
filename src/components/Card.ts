@@ -31,14 +31,9 @@ export class Card extends Component<ICard> {
 	}
 
 	set id(value: string) {this.container.dataset.id = value;}
-	get id(): string {return this.container.dataset.id || '';}
-
 	set title(value: string) {this.setText(this._title, value);}
-	get title() {return this._title.textContent || '';}
-
 	set description(value: string) {this.setText(this._description, value);}
-	get description() {return this._description.textContent || '';}
-
+	
 	set price(value: string) {
 		if (value) {
 			this.setText(this._price,`${value.toString().length <= 4 ? value : formatNumber(Number(value))} синапсов`);
@@ -46,17 +41,13 @@ export class Card extends Component<ICard> {
 		this.setText(this._price, `Бесценно`);
 		this.disabledButton(this._button, true);}
 	}
-
-	get price() {return this._price.textContent;}
+	
 	set image(value: string) {this.setImage(this._image, value, this.title);}
 
-	//Лейблы карточек
 	set category(value: string) {
 		this.setText(this._category, value);
 		this.toggleClass(this._category, labels.get(value), true);
 	}
-	get category() {return this._category.textContent || '';}
-	//
 
 	set button(value: string) {this._button.textContent = value;}
 }
