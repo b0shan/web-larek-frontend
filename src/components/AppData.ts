@@ -3,7 +3,7 @@ import { ICard, IOrder, TOrderField,TFormErrors } from '../types';
 import { IAppData } from '../types';
 
 export class AppData extends Model<IAppData> {
-	formErrors: TFormErrors = {};
+	
 	catalog: ICard[] = [];
 	basket: ICard[] = [];
 	preview: string | null;
@@ -16,6 +16,7 @@ export class AppData extends Model<IAppData> {
 		payment: '',
 	};
 	
+	formErrors: TFormErrors = {};
 
 	getCatalog(items: ICard[]) {
 		items.forEach((item) => (this.catalog = [...this.catalog, item]));
