@@ -14,16 +14,16 @@ export interface ICard {
 	price: number | null;
 	description: string;
 	image: string;
-	label: CardCategory;
+	category: CardCategory;
 	button: string;
 }
 
 // Категория для карточки
 export type CardCategory =
-	| 'софт-скилл'
+	| 'софт-скил'
+	| 'хард-скил'
 	| 'другое'
 	| 'дополнительное'
-	| 'хард-скилл'
 	| 'кнопка';
 
 // Реакция на клик по карточке
@@ -45,7 +45,7 @@ export interface IAppData {
 }
 
 // Тип карточки для главной страницы
-export type TCardPage = Pick<ICard,'id' | 'title' | 'price' | 'image' | 'label'>;
+export type TCardPage = Pick<ICard,'id' | 'title' | 'price' | 'image' | 'category'>;
 
 // Тип карточки для корзины
 export type TCardBasket = Pick<ICard, 'id' | 'title' | 'price'>;

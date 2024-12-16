@@ -57,7 +57,7 @@ events.on('preview:changed', (item: ICard) => {
 			image: item.image,
 			description: item.description,
 			price: item.price,
-			label: item.label,
+			category: item.category,
 			button: appData.getStatusButton(item),
 		}),
 	});

@@ -8,7 +8,7 @@ export class Card extends Component<ICard> {
 	protected _title: HTMLElement;
 	protected _image: HTMLImageElement;
 	protected _button: HTMLButtonElement;
-	protected _labels: HTMLSpanElement;
+	protected _category: HTMLSpanElement;
 	protected _price: HTMLSpanElement;
 	protected _description?: HTMLElement;
 
@@ -17,7 +17,7 @@ export class Card extends Component<ICard> {
 
 		this._title = ensureElement<HTMLElement>(`.card__title`, container);
 		this._price = ensureElement<HTMLSpanElement>(`.card__price`, container);
-		this._labels = container.querySelector(`.card__category`);
+		this._category = container.querySelector(`.card__category`);
 		this._button = container.querySelector(`.card__button`);
 		this._image = container.querySelector(`.card__image`);
 		this._description = container.querySelector(`.card__text`);
@@ -50,12 +50,14 @@ export class Card extends Component<ICard> {
 	get price() {return this._price.textContent;}
 	set image(value: string) {this.setImage(this._image, value, this.title);}
 
+	//Лейблы карточек
 	set category(value: string) {
-		this.setText(this._labels, value);
-		this.toggleClass(this._labels, labels.get(value), true);
+		this.setText(this._category, value);
+		this.toggleClass(this._category, labels.get(value), true);
 	}
+	get category() {return this._category.textContent || '';}
+	//
 
-	get category() {return this._labels.textContent || '';}
 	set button(value: string) {this._button.textContent = value;}
 }
 
