@@ -28,17 +28,6 @@ export class AppData extends Model<IAppData> {
 		this.sendUpdates('preview:changed', item);
 	}
 
-	getStatusButton(item: ICard) {
-		if (item.price === null) {
-			return 'Не для продажи';
-		}
-		if (!this.basket.some((card) => card.id == item.id)) {
-			return 'В корзину';
-		} else {
-			return 'Убрать из корзины';
-		}
-	}
-
 	toggleBasket(item: ICard) {
 		return !this.basket.some((card) => card.id === item.id)
 			? this.addCardToBasket(item)

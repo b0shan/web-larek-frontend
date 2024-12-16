@@ -48,7 +48,9 @@ events.on('preview:changed', (item: ICard) => {
 		onClick: () => {
 			events.emit('card:basket', item);
 			events.emit('preview:changed', item);
+			card.button  = (appData.basket.indexOf(item) < 0) ? (item.price === null ? 'Не для продажи' : 'В корзину'): 'Убрать из корзины';
 			modal.close();},
+			
 	});
 	modal.render({
 		content: card.renderComponent({
@@ -58,7 +60,7 @@ events.on('preview:changed', (item: ICard) => {
 			description: item.description,
 			price: item.price,
 			category: item.category,
-			button: appData.getStatusButton(item),
+			button: (appData.basket.indexOf(item) < 0) ? (item.price === null ? 'Не для продажи' : 'В корзину'): 'Убрать из корзины'
 		}),
 	});
 });
