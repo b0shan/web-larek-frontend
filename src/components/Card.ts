@@ -42,7 +42,9 @@ export class Card extends Component<ICard> {
 	set price(value: string) {
 		if (value) {
 			this.setText(this._price,`${value.toString().length <= 4 ? value : formatNumber(Number(value))} синапсов`);
-		} else {this.setText(this._price, `Бесценно`);}
+		} else {
+		this.setText(this._price, `Бесценно`);
+		this.disabledButton(this._button, true);}
 	}
 
 	get price() {return this._price.textContent;}

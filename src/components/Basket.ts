@@ -24,10 +24,11 @@ export class Basket extends Component<IBasket> {
 	set items(items: HTMLElement[]) {
 		if (items.length) {
 			this._list.replaceChildren(...items);
+			this.disabledButton(this._button, false);
 		} else {
 			this._list.replaceChildren(
-				createElement('p', { textContent: 'В корзине пока пусто' })
-			);
+				createElement('p', { textContent: 'В корзине пока пусто' }));
+			this.disabledButton(this._button, true);
 		}
 	}
 

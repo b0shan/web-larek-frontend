@@ -28,4 +28,13 @@ export abstract class Component<T> {
 	renderComponent(data?: Partial<T>): HTMLElement {Object.assign(this as object, data ?? {});
 		return this.container;
 	}
+
+	disabledButton(element: HTMLElement, state: boolean) {
+		if (element) {
+			if (state) element.setAttribute('disabled', 'disabled');
+			else element.removeAttribute('disabled');
+		}
+	}
+
+
 }
