@@ -73,10 +73,18 @@ export class AppData extends Model<IAppData> {
 		return this.basket.reduce((total, card) => total + card.price, 0);
 	}
 
-	setOrderPayment(value: string) {this.order.payment = value;}
-	setOrderAddress(value: string) {this.order.address = value;}
-	setOrderPhone(value: string) {this.order.phone = value;}
-	setOrderEmail(value: string) {this.order.email = value;}
+	setOrderPayment(value: string) {this.order.payment = value;
+		this.events.emit('formErrors:changed', this.formErrors);
+	}
+	setOrderAddress(value: string) {this.order.address = value;
+		this.events.emit('formErrors:changed', this.formErrors);
+	}
+	setOrderPhone(value: string) {this.order.phone = value;
+		this.events.emit('formErrors:changed', this.formErrors);
+	}
+	setOrderEmail(value: string) {this.order.email = value;
+		this.events.emit('formErrors:changed', this.formErrors);
+	}
 
 	setOrderField(field: keyof TOrderField, value: string) {
 		this.order[field] = value;
