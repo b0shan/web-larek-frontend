@@ -12,6 +12,15 @@ export class Card extends Component<ICard> {
 	protected _price: HTMLSpanElement;
 	protected _description?: HTMLElement;
 
+	protected _categoryColor = new Map<string, string>([
+		['софт-скил', '_soft'],
+		['другое', '_other'],
+		['дополнительное', '_additional'],
+		['кнопка', '_button'],
+		['хард-скил', '_hard'],
+	]);
+
+
 	constructor(container: HTMLElement, actions?: ICardActions) {
 		super(container);
 
@@ -33,7 +42,8 @@ export class Card extends Component<ICard> {
 	set id(value: string) {this.container.dataset.id = value;}
 	set title(value: string) {this.setText(this._title, value);}
 	set description(value: string) {this.setText(this._description, value);}
-	
+	set image(value: string) {this.setImage(this._image, value, this.title);}
+
 	set price(value: string) {
 		if (value) {
 			this.setText(this._price,`${value.toString().length <= 4 ? value : formatNumber(Number(value))} синапсов`);
@@ -42,11 +52,14 @@ export class Card extends Component<ICard> {
 		this.disabledButton(this._button, true);}
 	}
 	
-	set image(value: string) {this.setImage(this._image, value, this.title);}
+	
 
 	set category(value: string) {
 		this.setText(this._category, value);
 		this.toggleClass(this._category, labels.get(value), true);
+		this._category?.classList?.remove('card__category_soft');
+		this._category?.classList?.remove('card__category_other');
+		this._category?.classList?.add(`card__category${this._categoryColor.get(value)}`);
 	}
 
 	set button(value: string) {this._button.textContent = value;}
