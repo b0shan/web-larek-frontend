@@ -3,19 +3,16 @@ import { ICard, IOrder, TOrderField,TFormErrors } from '../types';
 import { IAppData } from '../types';
 
 export class AppData extends Model<IAppData> {
-	
 	catalog: ICard[] = [];
 	basket: ICard[] = [];
 	preview: string | null;
 	order: IOrder = {
-		total: 0,
-		items: [],
 		email: '',
 		phone: '',
 		address: '',
 		payment: '',
 	};
-	
+
 	formErrors: TFormErrors = {};
 
 	getCatalog(items: ICard[]) {
@@ -55,8 +52,6 @@ export class AppData extends Model<IAppData> {
 
 	resetOrder() {
 		this.order = {
-			total: 0,
-			items: [],
 			email: '',
 			phone: '',
 			address: '',
@@ -64,25 +59,37 @@ export class AppData extends Model<IAppData> {
 		};
 	}
 
-	setBasketInOrder() {
-		this.order.items = this.basket.map((card) => card.id);
-		this.order.total = this.getBasketTotal();
-	}
-
+	// Метод для получения итоговой суммы корзины
 	getBasketTotal() {
 		return this.basket.reduce((total, card) => total + card.price, 0);
 	}
 
-	setOrderPayment(value: string) {this.order.payment = value;
+	// Метод для формирования заказа
+	createOrder(): IOrder & { total: number; items: string[] } {
+		return {
+			...this.order,
+			total: this.getBasketTotal(),
+			items: this.basket.map((card) => card.id),
+		};
+	}
+
+	setOrderPayment(value: string) {
+		this.order.payment = value;
 		this.events.emit('formErrors:changed', this.formErrors);
 	}
-	setOrderAddress(value: string) {this.order.address = value;
+
+	setOrderAddress(value: string) {
+		this.order.address = value;
 		this.events.emit('formErrors:changed', this.formErrors);
 	}
-	setOrderPhone(value: string) {this.order.phone = value;
+
+	setOrderPhone(value: string) {
+		this.order.phone = value;
 		this.events.emit('formErrors:changed', this.formErrors);
 	}
-	setOrderEmail(value: string) {this.order.email = value;
+
+	setOrderEmail(value: string) {
+		this.order.email = value;
 		this.events.emit('formErrors:changed', this.formErrors);
 	}
 
@@ -93,19 +100,20 @@ export class AppData extends Model<IAppData> {
 
 	validOrder() {
 		const errors: typeof this.formErrors = {};
-		if (!this.order.email) {errors.email = `Не указана почта`;}
-		if (!this.order.phone) {errors.phone = `Не указан номер телефона`;}
-		if (!this.order.address) {errors.address = `Не указан адрес`;}
-		if (!this.order.payment) {errors.payment = `Не указан способ оплаты`;}
+		if (!this.order.email) {
+			errors.email = `Не указана почта`;
+		}
+		if (!this.order.phone) {
+			errors.phone = `Не указан номер телефона`;
+		}
+		if (!this.order.address) {
+			errors.address = `Не указан адрес`;
+		}
+		if (!this.order.payment) {
+			errors.payment = `Не указан способ оплаты`;
+		}
 		this.formErrors = errors;
 		this.events.emit('formErrors:changed', this.formErrors);
 		return Object.keys(errors).length === 0;
 	}
 }
-
-
-
-
-
-
-

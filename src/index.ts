@@ -115,11 +115,13 @@ events.on('order:submit', () => {
 });
 
 events.on('contacts:submit', () => {
-	appData.setBasketInOrder();
+	// Создаем объект заказа для отправки
+	const orderData = appData.createOrder();
+
 	api
-		.orderItems(appData.order)
+		.orderItems(orderData)
 		.then((result) => {
-			console.log(appData.basket, appData.order);
+			console.log(appData.basket, orderData);
 			const successWindow = new Success(cloneTemplate(successTemplate), {
 				onClick: () => {
 					modal.close();
@@ -129,7 +131,9 @@ events.on('contacts:submit', () => {
 			appData.resetOrder();
 			modal.render({ content: successWindow.renderComponent({ total: result.total }) });
 		})
-		.catch((err) => {console.error(`При заказе возникла ошибка ${err}`);});
+		.catch((err) => {
+			console.error(`При заказе возникла ошибка ${err}`);
+		});
 });
 
 events.on('formErrors:changed', (errors: Partial<IOrder>) => {
