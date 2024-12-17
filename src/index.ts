@@ -7,7 +7,7 @@ import { cloneTemplate, ensureElement } from './utils/utils';
 import { Page } from './components/Page';
 import { Modal } from './components/Modal';
 import { Basket } from './components/Basket';
-import { BasketCard, Card } from './components/Card';
+import { Card } from './components/Card';
 import { ICard, IOrder } from './types';
 import { OrderContacts, OrderPayment } from './components/Order';
 import { Success } from './components/Success';
@@ -71,17 +71,20 @@ events.on('basket:open', () => {modal.render({content: basket.renderComponent(),
 events.on('basket:changed', () => {
 	page.counter = appData.basket.length;
 	basket.sum = appData.getBasketTotal();
-	basket.items = appData.basket.map((basketCard) => {
-		const newBasketCard = new BasketCard(cloneTemplate(cardBasketTemplate), {
-			onClick: () => {appData.deleteCardFromBasket(basketCard);},
+	basket.items = appData.basket.map((basketCard, index) => {
+		const newCard = new Card(cloneTemplate(cardBasketTemplate), {
+			onClick: () => {
+				appData.deleteCardFromBasket(basketCard);
+			},
 		});
-		newBasketCard.index = appData.getIndex(basketCard);
-		return newBasketCard.renderComponent({
+		newCard.index = index + 1; 
+		return newCard.renderComponent({
 			title: basketCard.title,
 			price: basketCard.price,
 		});
 	});
 });
+
 
 events.on('order:open', () => {
 	paymentForm.clearPayment();
