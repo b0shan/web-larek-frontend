@@ -34,9 +34,19 @@ export class OrderPayment extends Form<TOrderPayment> {
 
 	set address(value: string) {this._address.value = value;}
 
+	protected isProcessingPayment: boolean = false;
+
 	setPayMethod(value: HTMLElement) {
-		this.clearPayment();
-		this.toggleClass(value, 'button_alt-active', true);
+		if (this.isProcessingPayment) return; // Прерваем, если уже обрабатывается
+	
+		this.isProcessingPayment = true; // Устанавливаем флаг
+		this.clearPayment(); // Сбрасваем состояние кнопок
+		this.toggleClass(value, 'button_alt-active', true); // Активируем выбранную кнопку
+		this.events.emit('order:changed', { 
+			payment: value.getAttribute('name') || '', 
+			button: value 
+		}); // Генерирууем событие
+		this.isProcessingPayment = false; // Сбрасываем флаг
 	}
 
 	clearPayment() {

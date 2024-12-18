@@ -107,14 +107,20 @@ export class AppData extends Model<IAppData> {
 		if (!this.order.phone) {
 			errors.phone = `Не указан номер телефона`;
 		}
-		if (!this.order.address) { // Проверяем наличие адреса
+		if (!this.order.address) {
 			errors.address = `Не указан адрес`;
 		}
 		if (!this.order.payment) {
 			errors.payment = `Не указан способ оплаты`;
 		}
+	
 		this.formErrors = errors;
-		this.events.emit('formErrors:changed', this.formErrors); // Обновляем состояние ошибок
+		this.events.emit('formErrors:changed', this.formErrors); // Уведомляем об ошибках
+	
+		// Проверяем состояние кнопки отправки заказа
+		this.events.emit('order:validation:state', {
+			valid: Object.keys(errors).length === 0,
+		});
 		return Object.keys(errors).length === 0;
 	}
 }

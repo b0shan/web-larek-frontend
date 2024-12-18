@@ -90,12 +90,20 @@ events.on('order:open', () => {
 	paymentForm.clearPayment();
 	modal.render({content: paymentForm.renderForm({address: '',valid: false,errors: [],}),
 	});
+	appData.validOrder();
 });
 
 events.on(
 	/^order\..*:changed/,
 	(data: {field: keyof Pick<IOrder, 'address' | 'phone' | 'email'>;value: string;}) => {appData.setOrderField(data.field, data.value);}
 );
+
+events.on('order:validation:state', (data: { valid: boolean }) => {
+    const submitButton = document.querySelector('.submit-button') as HTMLButtonElement;
+    if (submitButton) {
+        submitButton.disabled = !data.valid; // Деактивируем кнопку при невалидных данных
+    }
+});
 
 events.on('order:changed', (data: { payment: string; button: HTMLElement }) => {
 	paymentForm.setPayMethod(data.button);
