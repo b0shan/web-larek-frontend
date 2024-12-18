@@ -57,6 +57,7 @@ export class AppData extends Model<IAppData> {
 			address: '',
 			payment: '',
 		};
+		this.validOrder(); // Обновляем состояние валидации после сброса
 	}
 
 	// Метод для получения итоговой суммы корзины
@@ -95,7 +96,7 @@ export class AppData extends Model<IAppData> {
 
 	setOrderField(field: keyof TOrderField, value: string) {
 		this.order[field] = value;
-		this.validOrder();
+		this.validOrder(); // Проверяем валидность сразу после изменения
 	}
 
 	validOrder() {
@@ -106,14 +107,14 @@ export class AppData extends Model<IAppData> {
 		if (!this.order.phone) {
 			errors.phone = `Не указан номер телефона`;
 		}
-		if (!this.order.address) {
+		if (!this.order.address) { // Проверяем наличие адреса
 			errors.address = `Не указан адрес`;
 		}
 		if (!this.order.payment) {
 			errors.payment = `Не указан способ оплаты`;
 		}
 		this.formErrors = errors;
-		this.events.emit('formErrors:changed', this.formErrors);
+		this.events.emit('formErrors:changed', this.formErrors); // Обновляем состояние ошибок
 		return Object.keys(errors).length === 0;
 	}
 }
