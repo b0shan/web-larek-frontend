@@ -1,19 +1,27 @@
 import { TOrderContacts, TOrderPayment } from '../types';
 import { IEvents } from './base/events';
 import { Form } from './Form';
+import { AppData } from './AppData';
 
 export class OrderPayment extends Form<TOrderPayment> {
-    protected _address: HTMLInputElement;
+    public  _address: HTMLInputElement;
     protected buttonCash: HTMLButtonElement;
     protected buttonOnline: HTMLButtonElement;
-    protected isProcessingPayment: boolean = false; // Флаг для предотвращения рекурсии
+    protected isProcessingPayment: boolean = false; 
 
-    constructor(protected container: HTMLFormElement, protected events: IEvents) {
+    constructor(protected container: HTMLFormElement, protected events: IEvents, private appData: AppData) {
         super(container, events);
+
         this._address = container.elements.namedItem('address') as HTMLInputElement;
         this.buttonOnline = container.elements.namedItem('card') as HTMLButtonElement;
         this.buttonCash = container.elements.namedItem('cash') as HTMLButtonElement;
 
+        // Обработка изменения адреса
+        this._address.addEventListener('input', () => {
+            this.appData.setOrderField('address', this._address.value);
+        });
+
+        // Обработка выбора способа оплаты
         if (this.buttonOnline) {
             this.buttonOnline.addEventListener('click', () => {
                 this.setPayMethod(this.buttonOnline);
@@ -25,23 +33,31 @@ export class OrderPayment extends Form<TOrderPayment> {
                 this.setPayMethod(this.buttonCash);
             });
         }
+
+        // Слушаем обновления модели и синхронизируем данные с формой
+        this.events.on('form:update', () => {
+            this._address.value = this.appData.order.address || '';
+            this.updatePaymentButtonState(this.appData.order.payment);
+        });
     }
 
-    set address(value: string) {
-        this._address.value = value;
-    }
+    setPayMethod(button: HTMLElement) {
+        if (this.isProcessingPayment) return;
+        this.isProcessingPayment = true;
 
-    setPayMethod(value: HTMLElement) {
-        if (this.isProcessingPayment) return; // Прерываем, если метод уже выполняется
+        const paymentMethod = button.getAttribute('name') || ''; // Получаем метод оплаты
+        this.appData.setOrderField('payment', paymentMethod); // Обновляем модель через AppData
+        this.updatePaymentButtonState(paymentMethod); // Обновляем состояние кнопок
 
-        this.isProcessingPayment = true; // Устанавливаем флаг
-        this.clearPayment(); // Сбрасываем состояние других кнопок
-        this.toggleClass(value, 'button_alt-active', true); // Активируем выбранную кнопку
-        this.events.emit('order:changed', {
-            payment: value.getAttribute('name') || '',
-            button: value,
-        }); // Генерируем событие
         this.isProcessingPayment = false; // Сбрасываем флаг
+    }
+
+    updatePaymentButtonState(paymentMethod: string) {
+        const buttons = [this.buttonCash, this.buttonOnline];
+        buttons.forEach((button) => {
+            const isActive = button.getAttribute('name') === paymentMethod;
+            this.toggleClass(button, 'button_alt-active', isActive); 
+        });
     }
 
     clearPayment() {
@@ -50,32 +66,39 @@ export class OrderPayment extends Form<TOrderPayment> {
     }
 
     resetForm() {
-        this._address.value = ''; // Очищам поле адреса
+        this._address.value = ''; // Очищаем поля адреса
         this.clearPayment(); // Сбрасываем состояние кнопок
     }
 }
 
-
 export class OrderContacts extends Form<TOrderContacts> {
-    protected _email: HTMLInputElement;
-    protected _phone: HTMLInputElement;
+    public  _email: HTMLInputElement;
+    public  _phone: HTMLInputElement;
 
-    constructor(protected container: HTMLFormElement, protected events: IEvents) {
+    constructor(protected container: HTMLFormElement, protected events: IEvents, private appData: AppData) {
         super(container, events);
+
         this._email = container.elements.namedItem('email') as HTMLInputElement;
         this._phone = container.elements.namedItem('phone') as HTMLInputElement;
-    }
 
-    set email(value: string) {
-        this._email.value = value;
-    }
+        // Обработка изменений полей
+        this._email.addEventListener('input', () => {
+            this.appData.setOrderField('email', this._email.value);
+        });
 
-    set phone(value: string) {
-        this._phone.value = value;
+        this._phone.addEventListener('input', () => {
+            this.appData.setOrderField('phone', this._phone.value);
+        });
+
+        // Слушаем обновлени модели и синхронизируем данные с формой
+        this.events.on('form:update', () => {
+            this._email.value = this.appData.order.email || '';
+            this._phone.value = this.appData.order.phone || '';
+        });
     }
 
     resetForm() {
         this._email.value = ''; // Очищаем поле email
-        this._phone.value = ''; // Очищаем поле телефна
+        this._phone.value = ''; // Очищаем поле телефона
     }
 }

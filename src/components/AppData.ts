@@ -95,8 +95,11 @@ export class AppData extends Model<IAppData> {
 	}
 
 	setOrderField(field: keyof TOrderField, value: string) {
-		this.order[field] = value;
-		this.validOrder(); // Проверяем валидность сразу после изменения
+		if (this.order[field] !== value) {
+			this.order[field] = value;
+			this.validOrder();
+			this.events.emit('form:update'); // Уведомляем форму об изменниях
+		}
 	}
 
 	validOrder() {
