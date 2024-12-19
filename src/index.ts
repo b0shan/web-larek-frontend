@@ -123,25 +123,34 @@ events.on('order:submit', () => {
 });
 
 events.on('contacts:submit', () => {
-	// Создаем объект заказа для отправки
-	const orderData = appData.createOrder();
+    // Создаем объект заказа для отправки
+    const orderData = appData.createOrder();
 
-	api
-		.orderItems(orderData)
-		.then((result) => {
-			console.log(appData.basket, orderData);
-			const successWindow = new Success(cloneTemplate(successTemplate), {
-				onClick: () => {
-					modal.close();
-				},
-			});
-			appData.clearBasket();
-			appData.resetOrder();
-			modal.render({ content: successWindow.renderComponent({ total: result.total }) });
-		})
-		.catch((err) => {
-			console.error(`При заказе возникла ошибка ${err}`);
-		});
+    api.orderItems(orderData)
+        .then((result) => {
+            console.log(appData.basket, orderData);
+            
+            // Объявляем successWindow
+            const successWindow = new Success(cloneTemplate(successTemplate), {
+                onClick: () => {
+                    modal.close(); // Закрываем модальное окно при клике
+                },
+            });
+
+            // Очищаем данные корзины и заказа
+            appData.clearBasket();
+            appData.resetOrder();
+            paymentForm.resetForm(); // Сброс формы оплаты
+            contactForm.resetForm(); // Сброс формы контактов
+
+            // Отображаем успешное сообщение
+            modal.render({
+                content: successWindow.renderComponent({ total: result.total }),
+            });
+        })
+        .catch((err) => {
+            console.error(`При заказе возникла ошибка: ${err}`);
+        });
 });
 
 events.on('formErrors:changed', (errors: Partial<IOrder>) => {
